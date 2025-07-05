@@ -1,0 +1,14 @@
+{
+    "newMapMode": "mapclear",
+    "playerHP": 10,
+    "wallHP": 15,
+    "bulletDamage": 1,
+    "playerSpeed": 3,
+    "bulletSpeed": 4,
+    "targetFPS": 120,
+    "maxPlayers": 10,
+    "mapHeight": 10,
+    "mapWidth": 20,
+    "wallsNum": 20,
+    "UNIT": 51
+}
