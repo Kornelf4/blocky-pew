@@ -3,7 +3,7 @@ const ws = new WebSocket(`ws://${serverIp}:6567/ws`);
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 let allPlayers = {};
-let imprints = []; //only visual
+let imprints = [];
 let thisId = null;
 const textS = 32;
 const FPS = 120;
@@ -138,7 +138,6 @@ function renderPlayers() {
 }
 
 function generateImprints() {
-    //players
     for(let i in allPlayers) {
         allPlayers[i].imprintCounter++;
         if(allPlayers[i].imprintCounter >= allPlayers[i].maxImprintCounter) {
@@ -146,7 +145,6 @@ function generateImprints() {
             imprints.push(new Imprint(allPlayers[i], 0));
         }
     }
-    //bullets
     globalBulletImprintC++;
     if(globalBulletImprintC >= globalBulletImprintM) {
         globalBulletImprintC = 0;

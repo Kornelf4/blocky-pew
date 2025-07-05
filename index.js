@@ -1,11 +1,9 @@
 import { networkInterfaces } from 'node:os';
-
 let players = {};
 let map = [];
 let dieCounter = {};
 const configObj = JSON.parse(await Bun.file("gameRuleConfig.json").text());
 const {newMapMode, playerHP, wallHP, bulletDamage, playerSpeed, bulletSpeed, targetFPS, maxPlayers, mapHeight, mapWidth, wallsNum, UNIT} = configObj;
-console.log(newMapMode);
 const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 function getMinDieCount() {
     return Object.keys(dieCounter).reduce((key, v) => dieCounter[v] < dieCounter[key] ? v : key);
@@ -125,7 +123,6 @@ function createMap() {
         map[pointerY][mapWidth - pointerX - 1] = wallHP;
     }
 }
-
 createMap();
 class Player {
     constructor(name) {
@@ -172,7 +169,6 @@ class Bullet {
         this.maxImprintCounter = 1;
     }
 }
-
 const server = Bun.serve({
     port: 6567,
     hostname: getLocalIP(),
@@ -312,7 +308,6 @@ const server = Bun.serve({
                             players[i2].hp--;
                             if(players[i2].hp <= 0) {
                                 dieCounter[players[i2].name]++;
-                                console.log(dieCounter);
                                 server.publish("clients", JSON.stringify({
                                     type: "playerDel",
                                     id: i2
