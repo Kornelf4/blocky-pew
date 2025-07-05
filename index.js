@@ -131,17 +131,8 @@ class Player {
     constructor(name) {
         this.name = name;
         this.color = `rgb(${randomBetween(0, 255)},${randomBetween(0, 255)},${randomBetween(0, 255)})`;
-        while(true) {
-            this.x = getRndInteger(0, mapWidth);
-            this.y = getRndInteger(0, mapHeight);
-            //idk
-            if(map[this.y][this.x] <= 0) {
-                break;
-            }
-        }
-
-        this.x *= UNIT;
-        this.y *= UNIT;
+        this.x = 0;
+        this.y = 0;
         this.size = UNIT;
         this.hp = playerHP;
         this.speed = playerSpeed;
@@ -161,6 +152,7 @@ class Player {
             this.x *= UNIT;
             this.y *= UNIT;
         }
+        this.randomPos();
     }
 }
 class Bullet {
