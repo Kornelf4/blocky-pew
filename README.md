@@ -62,7 +62,7 @@ Alternatively, if you know the server owner's IP address, use `http://{IP}:6567`
 **Notes:**
 - The server runs on port `6567` (the same as Mindustry). If the server is not reachable, check your firewall and antivirus settings.
 - The server is optimized for LAN gameplay, but you can enable remote play by deploying with services like Coolify or by setting up port forwarding/tunneling (e.g., with [playit.gg](https://playit.gg)).  
-  Please do not host the server publicly (e.g., on platforms like y8) without contacting the developer first.
+  Please do not host the server publicly (e.g., on platforms like y8) without contacting the developer (me) first.
 
 Have fun!
 Can I have a star

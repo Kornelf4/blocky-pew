@@ -105,6 +105,9 @@ ws.onmessage = (message) => {
     let rawData = JSON.parse(message.data)
     window[rawData.type](rawData);
 }
+ws.close = () => {
+    alert("Disconnected from server.")
+}
 
 function renderWalls() {
     ctx.strokeStyle = "white";
