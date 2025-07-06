@@ -17,19 +17,21 @@ let UNIT = 50;
 let globalBulletImprintC = 0;
 const globalBulletImprintM = 3;
 let allMap = [];
+let playerImprintSizeChange = 0;
 
 let mapWidth = 20;
 let mapHeight = 10;
 
 
 class Imprint {
-    constructor(parent, lifetimeMinus) {
+    constructor(parent, lifetimeMinus, sizeChange) {
         this.x = parent.x;
         this.y = parent.y;
         this.size = parent.size;
         this.color = parent.color;
         this.alpha = 1;
         this.maxlifetime = 60;
+        this.sizeChange = sizeChange;
         this.lifetime = this.maxlifetime - lifetimeMinus;
     }
 }
@@ -62,8 +64,9 @@ function playerAdded({id, player}) {
 function playerDel({id}) {
     delete allPlayers[id];
 }
-function IdSend({id}) {
+function IdSend({id, PSizeC}) {
     thisId = id;
+    playerImprintSizeChange = PSizeC;
 }
 
 function mapUpdate({width, height, map, serverUnit}) {
@@ -142,7 +145,7 @@ function generateImprints() {
         allPlayers[i].imprintCounter++;
         if(allPlayers[i].imprintCounter >= allPlayers[i].maxImprintCounter) {
             allPlayers[i].imprintCounter = 0;
-            imprints.push(new Imprint(allPlayers[i], 0));
+            imprints.push(new Imprint(allPlayers[i], 0, playerImprintSizeChange));
         }
     }
     globalBulletImprintC++;
@@ -150,7 +153,7 @@ function generateImprints() {
         globalBulletImprintC = 0;
         for(let i in allPlayers) {
             for(let i2 = 0; i2 < allPlayers[i].activeBullets.length; i2++) {
-               imprints.push(new Imprint(allPlayers[i].activeBullets[i2], 10)); 
+               imprints.push(new Imprint(allPlayers[i].activeBullets[i2], 10, 0.3)); 
             }
         }
     }
@@ -171,6 +174,9 @@ function renderImprints() {
     for(let i = 0; i < imprints.length; i++) {
         imprints[i].lifetime--;
         imprints[i].alpha = imprints[i].lifetime / imprints[i].maxlifetime;
+        imprints[i].size -= imprints[i].sizeChange;
+        imprints[i].x += imprints[i].sizeChange / 2;
+        imprints[i].y += imprints[i].sizeChange / 2;
         if (imprints[i].lifetime <= 0) {
             imprints.splice(i, 1);
             i--;

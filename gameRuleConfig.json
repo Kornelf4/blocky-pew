@@ -10,5 +10,8 @@
     "mapHeight": 10,
     "mapWidth": 20,
     "wallsNum": 20,
-    "UNIT": 51
+    "UNIT": 51,
+    "bulletDestroyBullet": true,
+    "bulletWarpCount": 1,
+    "playerImprintSizeChange": 1
 }

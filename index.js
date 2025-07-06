@@ -3,7 +3,7 @@ let players = {};
 let map = [];
 let dieCounter = {};
 const configObj = JSON.parse(await Bun.file("gameRuleConfig.json").text());
-const {newMapMode, playerHP, wallHP, bulletDamage, playerSpeed, bulletSpeed, targetFPS, maxPlayers, mapHeight, mapWidth, wallsNum, UNIT} = configObj;
+const {newMapMode, playerHP, wallHP, bulletDamage, playerSpeed, bulletSpeed, targetFPS, maxPlayers, mapHeight, mapWidth, wallsNum, UNIT, bulletDestroyBullet, bulletWarpCount, playerImprintSizeChange} = configObj;
 const randomBetween = (min, max) => min + Math.floor(Math.random() * (max - min + 1));
 function getMinDieCount() {
     return Object.keys(dieCounter).reduce((key, v) => dieCounter[v] < dieCounter[key] ? v : key);
@@ -156,7 +156,7 @@ class Bullet {
     constructor(parentId, angle) {
         this.angle = angle;
         this.parentId = parentId;
-        this.size = 6;
+        this.size = 8;
         this.x = players[parentId].x + (players[parentId].size / 2) - (this.size / 2);
         this.y = players[parentId].y + (players[parentId].size / 2) - (this.size / 2);
         this.color = players[parentId].color;
@@ -164,7 +164,7 @@ class Bullet {
         this.vx = this.speed * Math.cos(this.angle * Math.PI / 180);
         this.vy = this.speed * Math.sin(this.angle * Math.PI / 180);
         this.warpCounter = 0;
-        this.maxWarpCount = 1;
+        this.maxWarpCount = bulletWarpCount;
         this.imprintCounter = 0;
         this.maxImprintCounter = 1;
     }
@@ -377,10 +377,24 @@ const server = Bun.serve({
                                 serverUnit: UNIT,
                                 map: map
                             }));
-                            for(i in players) {
-                                players[i].randomPos();
-                                players[i].hp = playerHP;
-                                dieCounter[players[i].name] = 0;
+                            for(let i2 in players) {
+                                players[i2].randomPos();
+                                players[i2].hp = playerHP;
+                                dieCounter[players[i2].name] = 0;
+                            }
+                        }
+                        continue;
+                    }
+                    if(bulletDestroyBullet) {
+                        for(let i2 in players) {
+                            if(i2 == ws.id) continue;
+                            for(let i3 = 0; i3 < players[i2].activeBullets.length; i3++) {
+                                if(checkAABBCollision(players[ws.id].activeBullets[i], players[i2].activeBullets[i3])) {
+                                    players[ws.id].activeBullets.splice(i, 1);
+                                    players[i2].activeBullets.splice(i3, 1);
+                                    i--;
+                                    i3--;
+                                }
                             }
                         }
                     }
@@ -397,7 +411,8 @@ const server = Bun.serve({
             ws.id = crypto.randomUUID();
             ws.send(JSON.stringify({
                 type: "IdSend",
-                id: ws.id
+                id: ws.id,
+                PSizeC: playerImprintSizeChange
             }));
             ws.send(JSON.stringify({
                 type: "playerPush",
